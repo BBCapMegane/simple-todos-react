@@ -8,6 +8,7 @@ import {Questions} from '../api/questions.js';
 
 import Question from './Question.js';
 import AccountsUIWrapper from './AccountsUIWrapper.js';
+import Result from './Result.js';
 
 // App component - represents the whole app
 class App extends Component {
@@ -56,28 +57,43 @@ class App extends Component {
         Session.set('q_num', questionNumber + 1);
     }
 
+    renderResult() {
+        let list = [];
+
+        for (let index = 1; 10 >= index; ++index) {
+            list.push(<Result key={ index } questionNumber={ index }/>)
+        }
+
+        return(
+            <div>
+                { list }
+            </div>
+        )
+
+    }
+
     render() {
         return (
             <div className="container">
                 <header>
-                    <h1>React 合宿 {this.props.q_count} {this.props.yesCount} {this.props.noCount}</h1>
+                    <h1>React 合宿アンケート</h1>
 
-                    <label className="hide-completed">
-                        <input
-                            type="checkbox"
-                            readOnly
-                            checked={this.state.hideCompleted}
-                            onClick={this.toggleHideCompleted.bind(this)}
-                        />
-                        Hide Completed Tasks
-                    </label>
+                    {/*<label className="hide-completed">*/}
+                        {/*<input*/}
+                            {/*type="checkbox"*/}
+                            {/*readOnly*/}
+                            {/*checked={this.state.hideCompleted}*/}
+                            {/*onClick={this.toggleHideCompleted.bind(this)}*/}
+                        {/*/>*/}
+                        {/*Hide Completed Tasks*/}
+                    {/*</label>*/}
 
                     <AccountsUIWrapper/>
 
                 </header>
 
-                {this.props.currentUser && 10 >= Number(Session.get('q_num')) ?
-                    <Question questionNumber={Session.get('q_num')}/> : ''
+                {this.props.currentUser ?
+                    <Question questionNumber={Session.get('q_num')}/> : <p>ログインして</p>
                 }
 
                 {this.props.currentUser && 10 >= Number(Session.get('q_num')) ?
@@ -85,18 +101,18 @@ class App extends Component {
                         <button onClick={this.yesSubmit.bind(this)}>Yes</button>
                         <button onClick={this.noSubmit.bind(this)}>No</button>
                     </form> :
-                    <p>ログインして</p>
+                    ``
                 }
 
                 {this.props.currentUser && 10 >= Number(Session.get('q_num')) ?
-                    <div>
-                        <p>質問 {Session.get(Session.get('q_num'))} の回答</p>
-                        <p>トータル回答数：{this.props.q_count}</p>
-                        <p>Yes：{this.props.yesCount}</p>
-                        <p>No：{this.props.noCount}</p>
-                    </div>
+                    <Result questionNumber={Session.get('q_num')}/>
                     :''
                 }
+                {
+                    this.renderResult()
+                }
+
+
             </div>
         );
     }
@@ -107,7 +123,7 @@ export default withTracker(() => {
     Meteor.subscribe('questions');
 
     return {
-        q_count: Questions.find({ questionsNumber: Session.get('q_num') }).count(),
+        totalCount: Questions.find({ questionsNumber: Session.get('q_num') }).count(),
         yesCount: Questions.find({
             $and: [
                 { questionsNumber: Session.get('q_num') },

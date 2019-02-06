@@ -40,7 +40,7 @@ export default class Question extends Component {
                 questionMessage = '今回の合宿は楽しかったですか10';
                 break;
             default:
-                questionMessage = 'ありがとうございまし！';
+                questionMessage = 'ありがとうございました！';
                 break;
         }
 
