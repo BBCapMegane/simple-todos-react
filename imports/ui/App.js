@@ -10,6 +10,8 @@ import Question from './Question.js';
 import AccountsUIWrapper from './AccountsUIWrapper.js';
 import Result from './Result.js';
 
+import BarChart from 'react-bar-chart';
+
 // App component - represents the whole app
 class App extends Component {
     constructor(props) {
@@ -61,12 +63,28 @@ class App extends Component {
         let list = [];
 
         for (let index = 1; 10 >= index; ++index) {
-            list.push(<Result key={ index } questionNumber={ index }/>)
+            list.push(
+                <div ref='root' key={index}>
+                    <Result key={index} questionNumber={index}/>
+                    <div style={{width: '50%'}}>
+                        <BarChart ylabel={'質問' + index +  'の回答'}
+                                  width={500}
+                                  height={500}
+                                  margin={{top: 20, right: 20, bottom: 30, left: 40}}
+                                  data={[
+                                      {text: 'YES', value: this.props.yesCountList[index - 1]},
+                                      {text: 'No', value: this.props.noCountList[index - 1]}
+                                  ]}
+                            // onBarClick={this.handleBarClick}
+                        />
+                    </div>
+                </div>
+            )
         }
 
-        return(
+        return (
             <div>
-                { list }
+                {list}
             </div>
         )
 
@@ -77,16 +95,6 @@ class App extends Component {
             <div className="container">
                 <header>
                     <h1>React 合宿アンケート</h1>
-
-                    {/*<label className="hide-completed">*/}
-                        {/*<input*/}
-                            {/*type="checkbox"*/}
-                            {/*readOnly*/}
-                            {/*checked={this.state.hideCompleted}*/}
-                            {/*onClick={this.toggleHideCompleted.bind(this)}*/}
-                        {/*/>*/}
-                        {/*Hide Completed Tasks*/}
-                    {/*</label>*/}
 
                     <AccountsUIWrapper/>
 
@@ -104,14 +112,10 @@ class App extends Component {
                     ``
                 }
 
-                {this.props.currentUser && 10 >= Number(Session.get('q_num')) ?
-                    <Result questionNumber={Session.get('q_num')}/>
-                    :''
-                }
-                {
+                {this.props.currentUser  ?
                     this.renderResult()
+                    : ''
                 }
-
 
             </div>
         );
@@ -122,22 +126,34 @@ export default withTracker(() => {
     Meteor.subscribe('tasks');
     Meteor.subscribe('questions');
 
-    return {
-        totalCount: Questions.find({ questionsNumber: Session.get('q_num') }).count(),
-        yesCount: Questions.find({
+    let yesList = [];
+    let noList = [];
+    for (let index = 1; 10 >= index; ++index) {
+        yesList.push(Questions.find({
             $and: [
-                { questionsNumber: Session.get('q_num') },
-                { answer: 1 },
+                {questionsNumber: index},
+                {answer: 1},
             ],
-        }).count(),
+        }).count());
 
-        noCount: Questions.find({
+        noList.push(Questions.find({
             $and: [
-                { questionsNumber: Session.get('q_num') },
-                { answer: 0 },
+                {questionsNumber: index},
+                {answer: 0},
             ],
-        }).count(),
+        }).count());
+    }
+
+    return {
+        totalCount: Questions.find({questionsNumber: Session.get('q_num')}).count(),
+
+        yesCountList: yesList,
+        noCountList: noList,
 
         currentUser: Meteor.user(),
+        data: [
+            {text: 'Man', value: 500},
+            {text: 'Woman', value: 300}
+        ]
     };
 })(App);

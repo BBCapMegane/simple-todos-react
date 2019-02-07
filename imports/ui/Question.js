@@ -10,34 +10,34 @@ export default class Question extends Component {
         let questionMessage = '';
         switch (this.props.questionNumber) {
             case 1:
-                questionMessage = '今回の合宿は楽しかったですか1';
+                questionMessage = '今回の合宿は楽しかったですか？';
                 break;
             case 2:
-                questionMessage = '今回の合宿は楽しかったですか2';
+                questionMessage = '温泉入った？';
                 break;
             case 3:
-                questionMessage = '今回の合宿は楽しかったですか3';
+                questionMessage = '海行った？';
                 break;
             case 4:
-                questionMessage = '今回の合宿は楽しかったですか4';
+                questionMessage = 'お土産買った？';
                 break;
             case 5:
-                questionMessage = '今回の合宿は楽しかったですか5';
+                questionMessage = '成長できた？';
                 break;
             case 6:
-                questionMessage = '今回の合宿は楽しかったですか6';
+                questionMessage = '目標は達成できた？';
                 break;
             case 7:
-                questionMessage = '今回の合宿は楽しかったですか7';
+                questionMessage = '作ったものに満足してる？';
                 break;
             case 8:
-                questionMessage = '今回の合宿は楽しかったですか8';
+                questionMessage = 'Reactが好きだ！仲良くなれそう！';
                 break;
             case 9:
-                questionMessage = '今回の合宿は楽しかったですか9';
+                questionMessage = 'React チョットデキル ようになった？';
                 break;
             case 10:
-                questionMessage = '今回の合宿は楽しかったですか10';
+                questionMessage = 'また合宿に参加したいですか？';
                 break;
             default:
                 questionMessage = 'ありがとうございました！';
